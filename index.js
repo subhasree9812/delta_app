@@ -31,28 +31,62 @@ app.get("/", (req, res) => {
             console.log(err);
             res.send("Error in DB");
         } else {
-            res.render("index", { count: result[0].count });
+            res.render("home.ejs", { count: result[0].count });
         }
     });
 });
 
 // Show route
 app.get("/user", (req, res) => {
-    let q = 'SELECT * FROM user';
-    try {
-        connection.query(q, (err, result) => {
-            if (err) throw err;
-            console.log(result);
-            res.render("users", { users: result });
-        });
-    } catch (err) {
-        console.log(err);
-        res.send("Some error in DB");
-    }
-});
+    let q = `select * from user`;
+  });
 
 app.listen(8080, () => {
     console.log("Server is listening on port 8080");
 });
 
-  
+//Edit Route
+app.get("/user/:id/edit",(req,res)=>{
+    let {id} = req.params;
+    let q = `SELECT * FROM user WHERE id='${id}'`;
+    try {
+        connection.query(q, (err, result) => {
+          if (err) throw err;
+          let user = result[0];
+          res.render("edit.ejs"),{user};
+        });
+      }
+      catch (err) {
+        console.log(err);
+        res.send("some error in database")
+      }
+   
+});
+
+
+
+// function addData() {
+//     // Prepare SQL query for inserting a user
+//     const query = 'INSERT INTO user (id, username, email, password) VALUES ?';
+//     const values = [];
+
+//     // Generate 100 random users
+//     for (let i = 0; i < 100; i++) {
+//         values.push(getRandomUser());
+//     }
+
+//     // Insert the users into the database
+//     connection.query(query, [values], (err, results) => {
+//         if (err) {
+//             console.error('An error occurred:', err);
+//         } else {
+//             console.log('100 records added successfully!');
+//         }
+
+//         // Close the connection after the operation
+//         connection.end();
+//     });
+// }
+
+// // Call the function to add data
+// addData();
