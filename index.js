@@ -37,12 +37,27 @@ app.get("/", (req, res) => {
 });
 
 // Show route
-app.get("/user", (req, res) => {
-    let q = `select * from user`;
+
+    //SHOW route
+app.get("/user",(req, res) => {
+    let q = "SELECT * FROM user ";
+  
+    try{
+      connection.query( q, (err, result) =>{
+         if(err) throw err;
+         let users =result;
+          res.render("showusers.ejs", {users})
+        })
+      }catch(err){
+      console.log(err);
+      res.send("err in database");
+      };
   });
+    
+  
 
 app.listen(8080, () => {
-    console.log("Server is listening on port 8080");
+    console.log("Server is listening on port 8080: ${port}");
 });
 
 //Edit Route
@@ -52,6 +67,7 @@ app.get("/user/:id/edit",(req,res)=>{
     try {
         connection.query(q, (err, result) => {
           if (err) throw err;
+          console.log(result);
           let user = result[0];
           res.render("edit.ejs"),{user};
         });
@@ -62,6 +78,7 @@ app.get("/user/:id/edit",(req,res)=>{
       }
    
 });
+
 
 
 
